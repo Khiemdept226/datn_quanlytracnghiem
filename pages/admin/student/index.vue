@@ -3,7 +3,6 @@
     :headers="headers"
     :items="desserts"
     :search="search"
-    sort-by="calories"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -38,31 +37,37 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.name"
-                      label="Dessert name"
+                      label="Full Name"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
+                      v-model="editedItem.studentid"
+                      label="Student ID"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
+                      v-model="editedItem.birth"
+                      label="Date of birth"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
+                      v-model="editedItem.gender"
+                      label="Gender"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
+                      v-model="editedItem.phone"
+                      label="Phone number"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.email"
+                      label="Email"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -117,27 +122,30 @@ export default {
         sortable: false,
         value: "name",
       },
-      { text: "Calories", value: "calories" },
-      { text: "Fat (g)", value: "fat" },
-      { text: "Carbs (g)", value: "carbs" },
-      { text: "Protein (g)", value: "protein" },
+      { text: "Student ID", value: "studentid" },
+      { text: "Date of birth", value: "birth" },
+      { text: "Gender", value: "gender" },
+      { text: "Phone number", value: "phone" },
+      { text: "Email", value: "email" },
       { text: "Actions", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      studentid: 0,
+      birth: "",
+      gender: "",
+      phone: "",
+      email: "",
     },
     defaultItem: {
       name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      studentid: 0,
+      birth: "",
+      gender: "",
+      phone: "",
+      email: "",
     },
   }),
 
@@ -164,74 +172,60 @@ export default {
     initialize() {
       this.desserts = [
         {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
+          name: "Nguyễn Hữu Khiêm",
+          studentid: 20191232,
+          birth: "22/06/2001",
+          gender: "Nam",
+          phone: "0978544132",
+          email: "huukhiem@gmail.com",
         },
         {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
+          name: "Đặng Thu Trang",
+          studentid: 20194769,
+          birth: "01/08/2001",
+          gender: "Nữ",
+          phone: "0326877925",
+          email: "trangdt@gmail.com",
         },
         {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
+          name: "Nguyễn Thành Long",
+          studentid: 20190819,
+          birth: "13/03/2001",
+          gender: "Nam",
+          phone: "0986177432",
+          email: "longnt01@gmail.com",
         },
         {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
+          name: "Trần Trọng Tùng",
+          studentid: 20192145,
+          birth: "10/10/2001",
+          gender: "Nam",
+          phone: "0988125672",
+          email: "trongtung@gmail.com",
         },
         {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
+          name: "Nguyễn Tường Vy",
+          studentid: 20194928,
+          birth: "20/03/2001",
+          gender: "Nữ",
+          phone: "0338126345",
+          email: "tuongvy123@gmail.com",
         },
         {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
+          name: "Đinh Thị Ngọc Bích",
+          studentid: 20192996,
+          birth: "18/06/2001",
+          gender: "Nữ",
+          phone: "0322689443",
+          email: "bichngoc@gmail.com",
         },
         {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
+          name: "Nguyễn Tất Cường",
+          studentid: 20190138,
+          birth: "25/12/2001",
+          gender: "Nam",
+          phone: "0987311866",
+          email: "tatcuong@gmail.com",
         },
       ];
     },
