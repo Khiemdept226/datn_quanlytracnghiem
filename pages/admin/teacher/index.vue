@@ -2,12 +2,22 @@
   <v-data-table
     :headers="headers"
     :items="desserts"
-    sort-by="calories"
+    :search="search"
     class="elevation-1"
   >
     <template v-slot:top>
       <v-toolbar flat>
-        <v-toolbar-title>My CRUD</v-toolbar-title>
+        <v-card-title>
+          DANH SÁCH GIÁO VIÊN
+          <v-spacer></v-spacer>
+        </v-card-title>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
@@ -27,31 +37,37 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.name"
-                      label="Dessert name"
+                      label="Full Name"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
+                      v-model="editedItem.birth"
+                      label="Date of birth"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
+                      v-model="editedItem.gender"
+                      label="Gender"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
+                      v-model="editedItem.phone"
+                      label="Phone number"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
+                      v-model="editedItem.email"
+                      label="Email"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.subject"
+                      label="Subject"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -84,7 +100,7 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:[`item.actions`]="{ item }">
+    <template v-slot:item.actions="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
       <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
@@ -98,34 +114,38 @@ export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    search: "",
     headers: [
       {
-        text: "Dessert (100g serving)",
+        text: "Full Name",
         align: "start",
         sortable: false,
         value: "name",
       },
-      { text: "Calories", value: "calories" },
-      { text: "Fat (g)", value: "fat" },
-      { text: "Carbs (g)", value: "carbs" },
-      { text: "Protein (g)", value: "protein" },
+      { text: "Date of birth", value: "birth" },
+      { text: "Gender", value: "gender" },
+      { text: "Phone number", value: "phone" },
+      { text: "Email", value: "email" },
+      { text: "Subject", value: "subject" },
       { text: "Actions", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      birth: "",
+      gender: "",
+      phone: "",
+      email: "",
+      subject: "",
     },
     defaultItem: {
       name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      birth: "",
+      gender: "",
+      phone: "",
+      email: "",
+      subject: "",
     },
   }),
 
@@ -152,74 +172,60 @@ export default {
     initialize() {
       this.desserts = [
         {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
+          name: "Nguyễn Kim Dũng",
+          birth: "04/10/1979",
+          gender: "Nam",
+          phone: "0923866111",
+          email: "kimdung@gmail.com",
+          subject: "Toán học",
         },
         {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
+          name: "Đào Lê Thu Thảo",
+          birth: "08/06/1985",
+          gender: "Nữ",
+          phone: "0356188967",
+          email: "thuthaodt@gmail.com",
+          subject: "Ngữ Văn",
         },
         {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
+          name: "Trịnh Hữu Việt",
+          birth: "13/05/1981",
+          gender: "Nam",
+          phone: "0982773466",
+          email: "viethuu11@gmail.com",
+          subject: "Vật lý",
         },
         {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
+          name: "Trần Hữu Bình",
+          birth: "10/11/1976",
+          gender: "Nam",
+          phone: "0946110284",
+          email: "binhnguyen@gmail.com",
+          subject: "Toán học",
         },
         {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
+          name: "Nguyễn Thị Lan",
+          birth: "18/03/1978",
+          gender: "Nữ",
+          phone: "0326508234",
+          email: "lannguyen123@gmail.com",
+          subject: "Tiếng Anh",
         },
         {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
+          name: "Vũ Lê Minh Tâm",
+          birth: "28/12/1984",
+          gender: "Nữ",
+          phone: "0328139643",
+          email: "minhtam@gmail.com",
+          subject: "Ngữ Văn",
         },
         {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
+          name: "Phạm Hoàng Hải",
+          birth: "06/01/1983",
+          gender: "Nam",
+          phone: "0981183676",
+          email: "phoanghai@gmail.com",
+          subject: "Hóa học",
         },
       ];
     },
