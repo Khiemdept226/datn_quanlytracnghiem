@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  name: "DefaultLayout",
+  name: "TeacherLayout",
   data() {
     return {
       clipped: false,
@@ -46,24 +46,29 @@ export default {
       fixed: false,
       items: [
         {
-          icon: "mdi-account-injury",
-          title: "Teachers",
-          to: "/admin/teacher",
-        },
-        {
-          icon: "mdi-account-group",
-          title: "Students",
-          to: "/admin/student",
+          icon: "mdi-application",
+          title: "Subjects",
+          to: "/teacher/subject",
         },
         {
           icon: "mdi-calendar-edit",
           title: "Questions",
-          to: "/admin/question",
+          to: "/teacher/question/create",
         },
         {
           icon: "mdi-file-document-outline",
           title: "Exams",
-          to: "/exams",
+          to: "/teacher/exam",
+        },
+        {
+          icon: "mdi-google-classroom",
+          title: "Exam Class",
+          to: "/teacher/exclass",
+        },
+        {
+          icon: "mdi-marker",
+          title: "Mark Exam",
+          to: "/teacher/mark",
         },
       ],
       miniVariant: false,

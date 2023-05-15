@@ -1,0 +1,18 @@
+@import "./variables.scss";
+
+.app-table {
+  border: 1px solid $base-red-color;
+}
+.text-light {
+  color: $text-light;
+}
+
+.btn-create {
+  background-color: $btn-create-color;
+  color: $text-light;
+}
+
+.v-data-table-header {
+  background-color: $table-header-color;
+  color: $text-light;
+}

@@ -1,15 +1,19 @@
 <template>
   <v-container>
     <v-data-table
+      v-model="selected"
       :headers="headers"
       :items="desserts"
       :search="search"
-      class="elevation-1"
+      :single-select="singleSelect"
+      item-key="subject"
+      show-select
+      class="elevation-1 app-table"
     >
       <template v-slot:top>
-        <v-toolbar flat>
+        <v-toolbar flat color="base">
           <v-card-title>
-            DANH SÁCH GIÁO VIÊN
+            NGÂN HÀNG CÂU HỎI
             <v-spacer></v-spacer>
           </v-card-title>
           <v-text-field
@@ -21,11 +25,19 @@
           ></v-text-field>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
+          <form-uploader @submit="submitFile" />
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-                Thêm Giáo viên
+                TẠO CÂU HỎI
               </v-btn>
+            </template>
+            <template v-slot:top>
+              <v-switch
+                v-model="singleSelect"
+                label="Single select"
+                class="pa-3"
+              ></v-switch>
             </template>
             <v-card>
               <v-card-title>
@@ -34,44 +46,34 @@
 
               <v-card-text>
                 <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Họ và tên"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.birth"
-                        label="Ngày sinh"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.gender"
-                        label="Giới tính"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.phone"
-                        label="Số điện thoại"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.email"
-                        label="Email"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.subject"
-                        label="Môn giảng dạy"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
+                  <v-form ref="form">
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.stt"
+                          label="STT"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.subject"
+                          label="Môn học"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.question"
+                          label="Nội dung câu hỏi"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.information"
+                          label="Thông tin câu hỏi"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-form>
                 </v-container>
               </v-card-text>
 
@@ -87,7 +89,7 @@
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="text-h5"
-                >Are you sure you want to delete this item?</v-card-title
+                >Are you sure you want to delete this student?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -113,49 +115,55 @@
     </v-data-table>
   </v-container>
 </template>
+
 <script>
+import FormUploader from "../../../components/ui/FormUploader.vue";
 export default {
+  name: "CreateQuestionPage",
+  layout: "teacher",
+  components: { FormUploader },
   data: () => ({
     dialog: false,
     dialogDelete: false,
     search: "",
+    singleSelect: false,
+    selected: [],
     headers: [
       {
-        text: "Họ và tên",
+        text: "STT",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "stt",
       },
-      { text: "Ngày sinh", value: "birth" },
-      { text: "Giới tính", value: "gender" },
-      { text: "Số điện thoại", value: "phone" },
-      { text: "Email", value: "email" },
-      { text: "Môn giảng dạy", value: "subject" },
+      { text: "Môn học", value: "subject" },
+      { text: "Nội dung câu hỏi", value: "question" },
+      { text: "Thông tin câu hỏi", value: "information" },
       { text: "Tùy chỉnh", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      birth: "",
-      gender: "",
-      phone: "",
-      email: "",
+      stt: "",
       subject: "",
+      question: "",
+      information: "",
     },
     defaultItem: {
-      name: "",
-      birth: "",
-      gender: "",
-      phone: "",
-      email: "",
+      stt: "",
       subject: "",
+      question: "",
+      information: "",
     },
+    // formRules: {
+    //   name: [(v) => v.length >= 1 || "This field is required"],
+    //   studentid: [((v) => v && v.length === 8) || "This field is required"],
+    //   phone: [((v) => v && v.length === 10) || "This field is required"],
+    // },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "New Question" : "Edit Question";
     },
   },
 
@@ -173,63 +181,28 @@ export default {
   },
 
   methods: {
+    submitFile(file) {
+      console.log(123, file);
+    },
     initialize() {
       this.desserts = [
         {
-          name: "Nguyễn Kim Dũng",
-          birth: "04/10/1979",
-          gender: "Nam",
-          phone: "0923866111",
-          email: "kimdung@gmail.com",
+          stt: "1",
           subject: "Toán học",
+          question: "Số dương là số gì?",
+          information: "Chương: 3, Bài: Số nguyên, Mức độ: Dễ",
         },
         {
-          name: "Đào Lê Phương Thúy",
-          birth: "08/05/1985",
-          gender: "Nữ",
-          phone: "0356188967",
-          email: "thuydlp@gmail.com",
+          stt: "2",
           subject: "Ngữ Văn",
+          question: "Tác giả của bài thơ 'Nhớ rừng' là ai?",
+          information: "Chương: 4, Bài: Nhớ rừng, Mức độ: Trung bình",
         },
         {
-          name: "Trịnh Hữu Việt",
-          birth: "13/05/1981",
-          gender: "Nam",
-          phone: "0982773466",
-          email: "viethuu11@gmail.com",
-          subject: "Vật lý",
-        },
-        {
-          name: "Trần Hữu Bình",
-          birth: "10/11/1976",
-          gender: "Nam",
-          phone: "0946110284",
-          email: "binhnguyen@gmail.com",
-          subject: "Toán học",
-        },
-        {
-          name: "Nguyễn Thị Lan",
-          birth: "18/03/1978",
-          gender: "Nữ",
-          phone: "0326508234",
-          email: "lannguyen123@gmail.com",
-          subject: "Tiếng Anh",
-        },
-        {
-          name: "Vũ Lê Minh Tâm",
-          birth: "28/12/1984",
-          gender: "Nữ",
-          phone: "0328139643",
-          email: "minhtam@gmail.com",
-          subject: "Ngữ Văn",
-        },
-        {
-          name: "Phạm Hoàng Hải",
-          birth: "06/01/1983",
-          gender: "Nam",
-          phone: "0981183676",
-          email: "phoanghai@gmail.com",
+          stt: "3",
           subject: "Hóa học",
+          question: "Hóa trị của Cacbon trong hợp chất CO là bao nhiêu?",
+          information: "Chương: 1, Bài: Hóa trị, Mức độ: Khó",
         },
       ];
     },
